@@ -1,22 +1,26 @@
 <template>  
-  <div class="container">
-    <h2>To-Do</h2>
-    <TodoSimpleForm @add-todo="addTodo"/>
-    
+<h4>count: {{count}}</h4>
+<h4>double count: {{doubleCount}}</h4>
+<button @click="count++">Add one</button>
 
-    <div v-if="!todos.length">
-      추가된 Todo가 없습니다.
-    </div>
+<div class="container">
+  <h2>To-Do</h2>
+  <TodoSimpleForm @add-todo="addTodo"/>
+  
 
-    <TodoList :todos="todos"  
-              @toggle-todo="toggleTodo"
-              @delete-todo="deleteTodo"/>  
+  <div v-if="!todos.length">
+    추가된 Todo가 없습니다.
+  </div>
 
-  </div>  
+  <TodoList :todos="todos"  
+            @toggle-todo="toggleTodo"
+            @delete-todo="deleteTodo"/>  
+
+</div>  
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 export default {
@@ -27,6 +31,12 @@ export default {
   },
   setup() {
     const todos = ref([]);
+
+    const count = ref(1);
+    const doubleCount = computed(() => {
+      //count*2한 값을 doubldCount로 | count값에 따라 달라짐
+      return count.value*2;
+    });
 
     const addTodo = (todo) => {       //todo를 받아와서 추가
       todos.value.push(todo);
@@ -49,6 +59,8 @@ export default {
       deleteTodo,
       addTodo,
       toggleTodo,
+      count,
+      doubleCount,
     }
   }
 }
