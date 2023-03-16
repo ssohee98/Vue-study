@@ -32,6 +32,8 @@
 import { ref, computed } from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
+import axios from "axios";
+
 export default {
   components: {
     //import로 뷰 가져오고 componets 등록
@@ -58,6 +60,12 @@ export default {
     });
 
     const addTodo = (todo) => {       //todo를 받아와서 추가
+      //axios 서버를 이용하여 todo의 s,c 를 객체로 저장 (db.json에 저장됨)
+      axios.post('http://localhost:3000/todos', {
+        subject: todo.subject,
+        completed: todo.completed
+      });
+      
       todos.value.push(todo);
     }
 
