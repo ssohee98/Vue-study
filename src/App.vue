@@ -64,9 +64,11 @@ export default {
       axios.post('http://localhost:3000/todos', {
         subject: todo.subject,
         completed: todo.completed
+      }).then(res => {
+        //아이디값도 포함하여 todos에 저장
+        console.log(res.data);
+        todos.value.push(res.data);
       });
-      
-      todos.value.push(todo);
     }
 
     const toggleTodo = (index) => {   
