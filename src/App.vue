@@ -1,18 +1,23 @@
 <template>  
-<h4>count: {{count}}</h4>
-<h4>double count: {{doubleCount}}</h4>
-<button @click="count++">Add one</button>
-
 <div class="container">
   <h2>To-Do</h2>
-  <TodoSimpleForm @add-todo="addTodo"/>
+
+  <input
+    class="form-control"
+    type="text"
+    v-model="searchText"
+    placeholder="Search"
+  >
   
+  <hr>
+
+  <TodoSimpleForm @add-todo="addTodo"/>
 
   <div v-if="!todos.length">
     추가된 Todo가 없습니다.
   </div>
 
-  <TodoList :todos="todos"  
+  <TodoList :todos="filteredTodos"  
             @toggle-todo="toggleTodo"
             @delete-todo="deleteTodo"/>  
 
@@ -29,13 +34,23 @@ export default {
     TodoSimpleForm,
     TodoList,
   },
+
   setup() {
     const todos = ref([]);
 
-    const count = ref(1);
-    const doubleCount = computed(() => {
-      //count*2한 값을 doubldCount로 | count값에 따라 달라짐
-      return count.value*2;
+    const searchText = ref('');
+    const filteredTodos = computed(() => {
+      //검색할 값이 있으면 필터처리
+      if(searchText.value) {
+        return todos.value.filter(todo => {
+          //todos배열을 하나씩 todo로 넘겨서
+          //todo의 subject 값이 searchText값을 포함한다면
+          return todo.subject.includes(searchText.value)
+        });
+      }
+
+      //없으면 그냥 todos
+      return todos.value
     });
 
     const addTodo = (todo) => {       //todo를 받아와서 추가
@@ -59,8 +74,8 @@ export default {
       deleteTodo,
       addTodo,
       toggleTodo,
-      count,
-      doubleCount,
+      searchText,
+      filteredTodos,
     }
   }
 }
