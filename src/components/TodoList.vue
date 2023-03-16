@@ -7,7 +7,7 @@
         <div class="form-check flex-grow-1">
         <input class="form-check-input" 
                 type="checkbox"
-                :value="todo.completed"
+                :checked="todo.completed"
                 @change="toggleTodo(index)"> 
         <label class="form-check-label"
                 :class="{todo: todo.completed}">
@@ -37,7 +37,10 @@ export default {
 
     setup(props, {emit}) { 
         //바뀐 부분을(index) 부모에게 toggle-todo이름으로 전달
+
+        //체크박스 유지
         const toggleTodo = (index) => {
+
             emit('toggle-todo', index);
         }
 
