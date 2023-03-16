@@ -49,6 +49,7 @@ export default {
 
     const error = ref('');
 
+    //검색
     const filteredTodos = computed(() => {
       //검색할 값이 있으면 필터처리
       if(searchText.value) {
@@ -63,6 +64,7 @@ export default {
       return todos.value
     });
 
+    //추가
     const addTodo = async (todo) => {       //todo를 받아와서 추가
       error.value = '';
       try {
@@ -78,7 +80,7 @@ export default {
       }
     }
 
-
+    //체크박스 스타일
     const toggleTodo = (index) => {   
       //index를 받아와서 그 부분의 completed를 반대로
       console.log(todos.value[index]);
@@ -86,11 +88,24 @@ export default {
       console.log(todos.value[index]);
     }
     
-    const deleteTodo = (index) => {
-      //index를 받아와서 배열에서 해당 index 하나 삭제
-      todos.value.splice(index, 1);   
+    //삭제
+    const deleteTodo = async (index) => {
+      error.value = '';
+
+      //삭제버튼을 누른 index의 todos id값
+      const id = todos.value[index].id;
+      
+      try {
+        //id값으로 json(DB)에서 해당 데이터 삭제
+        await axios.delete('http://localhost:3000/todos' + id);
+        //todos 배열에서도 삭제
+        todos.value.splice(index, 1); 
+      } catch(err) {
+        error.value="Something went wrong";
+      }
     }
 
+    //화면에 카드 유지
     const getTodos = async () => {    //json파일에 저장된 todo를 화면에 출력
       try {
         //url에서 get방식으로 모든 데이터가 배열로 넘어오면
