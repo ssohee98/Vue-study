@@ -78,6 +78,7 @@ export default {
       }
     }
 
+
     const toggleTodo = (index) => {   
       //index를 받아와서 그 부분의 completed를 반대로
       console.log(todos.value[index]);
@@ -90,6 +91,20 @@ export default {
       todos.value.splice(index, 1);   
     }
 
+    const getTodos = async () => {    //json파일에 저장된 todo를 화면에 출력
+      try {
+        //url에서 get방식으로 모든 데이터가 배열로 넘어오면
+        const res = await axios.get('http://localhost:3000/todos');
+        todos.value = res.data;
+      }catch(err) {
+        //서버가 정상적으로 작동하지않은채로 Add하면 에러메시지
+        error.value="Something went wrong";
+      }
+
+    }
+
+    getTodos();
+
     return {
       todos,
       deleteTodo,
@@ -98,6 +113,7 @@ export default {
       searchText,
       filteredTodos,
       error,
+      getTodos,
     }
   }
 }
