@@ -63,20 +63,19 @@ export default {
       return todos.value
     });
 
-    const addTodo = (todo) => {       //todo를 받아와서 추가
+    const addTodo = async (todo) => {       //todo를 받아와서 추가
       error.value = '';
-      //axios 서버를 이용하여 todo의 s,c 를 객체로 저장 (db.json에 저장됨)
-      axios.post('http://localhost:3000/todos', {
+      try {
+        const res = await axios.post('http://localhost:3000/todos', {
         subject: todo.subject,
         completed: todo.completed
-      }).then(res => {
+        }); 
         //아이디값도 포함하여 todos에 저장
-        console.log(res.data);
         todos.value.push(res.data);
-      }).catch(err => {
-        console.log(err);
+      }catch(err) {
+        //서버가 정상적으로 작동하지않은채로 Add하면 에러메시지
         error.value="Something went wrong";
-      });
+      }
     }
 
     const toggleTodo = (index) => {   
