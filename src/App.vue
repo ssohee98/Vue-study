@@ -115,7 +115,7 @@ export default {
     });
 
 
-    //추가
+    // Create 추가
     const addTodo = async (todo) => {       //todo를 받아와서 추가
       error.value = '';
       try {
@@ -132,7 +132,7 @@ export default {
     }
 
 
-    //체크박스 스타일
+    // Update 체크박스 스타일
     const toggleTodo = async (index) => {  
       error.value = '';
       //index를 받아와서 그 부분의 completed를 반대로
@@ -148,7 +148,7 @@ export default {
       } 
     }
    
-    //삭제
+    // Delete 삭제
     const deleteTodo = async(index) => {
       error.value='';
 
@@ -165,8 +165,9 @@ export default {
       }
     } 
 
-    //화면에 카드 유지 +페이징 처리
-    const getTodos = async (page = currentPage.value) => { //json파일에 저장된 todo를 화면에 출력
+    // Read 화면에 카드 유지 +페이징 처리
+    const getTodos = async (page = currentPage.value) => { 
+      //json파일에 저장된 todo를 화면에 출력
       currentPage.value = page;
       error.value = '';
       try{
