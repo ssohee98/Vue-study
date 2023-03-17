@@ -17,14 +17,16 @@
                 <div>
                     <button 
                         class="btn"
-                        :class="todo.completed ? 'btn-success' : 'btn-danger'">
+                        type="button"
+                        :class="todo.completed ? 'btn-success' : 'btn-danger'"
+                        @click="toogleTodoStatus">
                             {{ todo.completed ? 'Complete' : 'InComplete' }}
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    <button class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
   </form>
 </template>
 
@@ -50,9 +52,14 @@ export default {
 
         getTodo();
 
+        const toogleTodoStatus = () => {
+            todo.value.completed = !todo.value.completed;
+        }
+
         return {
             todo,
             loading,
+            toogleTodoStatus,
         }
     }
 }
