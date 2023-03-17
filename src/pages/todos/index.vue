@@ -147,7 +147,8 @@ export default {
 
 
     // Update 체크박스 스타일
-    const toggleTodo = async (index) => {  
+    const toggleTodo = async (index, checked) => {  
+      console.log(checked);
       error.value = '';
       //index를 받아와서 그 부분의 completed를 반대로
       const id = todos.value[index].id;
@@ -155,7 +156,7 @@ export default {
         await axios.patch('http://localhost:3000/todos/'+id, {
           completed: !todos.value[index].completed
         });
-        todos.value[index].completed = !todos.value[index].completed;  
+        todos.value[index].completed = checked;  //
       }catch(err){
         console.log(err);
         error.value = 'Someting went wrong';

@@ -10,7 +10,7 @@
         <input class="form-check-input" 
                 type="checkbox"
                 :checked="todo.completed"
-                @change="toggleTodo(index)"
+                @change="toggleTodo(index, $event)" 
                 @click.stop> 
         <label class="form-check-label"
                 :class="{todo: todo.completed}">
@@ -44,8 +44,9 @@ export default {
         const router = useRouter();
         //체크박스 유지
         //바뀐 부분을(index) 부모에게 toggle-todo이름으로 전달
-        const toggleTodo = (index) => {
-            emit('toggle-todo', index);
+        const toggleTodo = (index, event) => {
+            //이벤트가 발생한 target의 checked 도 함께 전달
+            emit('toggle-todo', index, event.target.checked);
         }
 
         //delete 버튼을 누른 부분을(index) 부모에게 delete-todo이름으로 전달
