@@ -1,5 +1,5 @@
 <template>  
-  <div class="container">
+    <div>
     <h2>To-Do</h2>
 
 
@@ -60,9 +60,7 @@
         </li>
       </ul>
     </nav>       
-
-
-  </div>  
+    </div>
 </template>
 
 

@@ -1,15 +1,43 @@
 <template>
-  <div> Todo Page </div>
+  <h1> Todo Page </h1>
+  <div v-if="loading">
+    Loading...
+  </div>
+  <form v-else>
+    <div class="form-group">
+        <label> Todo Subject </label>
+        <input v-model="todo.subject" type="text" class="form-control">
+    </div>
+    <button class="btn btn-primary">Save</button>
+  </form>
 </template>
 
 <script>
 import {useRoute} from 'vue-router';
+import axios from 'axios';
+import {ref} from '@vue/reactivity';
+
 export default {
     setup() {
         const route = useRoute();
+        const todo = ref(null);
+        const loading = ref(true);  //처음엔 true
 
         //route에서 넘어오는 파라미터 id 확인
         console.log(route.params.id);
+
+        const getTodo = async () => {
+            const res = await axios.get('http://localhost:3000/todos/' +route.params.id);
+            todo.value = res.data;
+            loading.value = false;  //데이터 받아오면 false
+        };
+
+        getTodo();
+
+        return {
+            todo,
+            loading,
+        }
     }
 }
 </script>
