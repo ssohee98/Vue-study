@@ -1,126 +1,140 @@
 <template>
-  <h1> Todo Page </h1>
+  <h1>Todo Page </h1>
   <div v-if="loading">
     Loading...
   </div>
   <form v-else
     @submit.prevent="onSave">
-    <div class = "row">
-        <div class = "col-6">
+    <div class="row">
+        <div class="col-6">
             <div class="form-group">
-                <label> Todo Subject </label>
-                <input v-model="todo.subject" type="text" class="form-control">
+            <label>Todo Subject</label>
+            <input v-model="todo.subject" type="text" class="form-control">
             </div>
-        </div>
-        <div class = "col-6">
+         </div>
+         <div class="col-6">
             <div class="form-group">
-                <label> Status </label>
-                <div>
-                    <button 
-                        class="btn"
-                        type="button"
-                        :class="todo.completed ? 'btn-success' : 'btn-danger'"
-                        @click="toogleTodoStatus">
-                            {{ todo.completed ? 'Complete' : 'InComplete' }}
-                    </button>
-                </div>
+             <label>status</label>
+             <div>
+                <button class="btn"
+                type="button"
+                :class="todo.completed ? 'btn-success' :  'btn-danger'"
+                    @click="toggleTodoStatus">
+                    {{todo.completed ? 'Completed' : 'Incompleted'}}
+                </button>
+             </div>
             </div>
         </div>
     </div>
-    <button 
-        type="submit" 
-        class="btn btn-primary"
-        :disabled="!todoUpdated">
-        Save
-    </button>
-    <button 
-        class="btn btn-primary ml-2"
-        @click="moveToListPage">
-        Cancel
-    </button>
-  </form>
-  <Toast/>
+    <button type="submit" class="btn btn-primary" :disabled = "!todoUpdated">Save</button>
+    <button class="btn btn-primary ml-2" @click="moveToListPage">Cancel</button>
+    </form>
+    <Toast v-if="showToast" 
+            :message="toastMessage"/>
 </template>
 
+
 <script>
-import {useRoute, useRouter} from 'vue-router';
 import axios from 'axios';
+import {useRoute, useRouter} from 'vue-router';
 import {ref, computed} from '@vue/reactivity';
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue';
 
+
 export default {
     components: {
         Toast
+       
     },
-
-    setup() {
+    setup(){
         const route = useRoute();
         const router = useRouter();
         const todo = ref(null);
         const loading = ref(true);  //처음엔 true
-        const todoId = route.params.id;
+        const todoId =  route.params.id;
         const originalTodo = ref(null);
 
-        const showToast = ref(false);
 
-        const triggerToast = () => {
+        const showToast = ref(false);
+        const toastMessage = ref('');
+
+        //Toast.vue에 메시지 전달
+        const triggerToast = (message) => {
             showToast.value = true;
+            toastMessage.value = message;
+            setTimeout(() => {
+                toastMessage.value = '';
+                showToast.value = false;
+            }, 3000);
         }
 
-        //route에서 넘어오는 파라미터 id 확인
-        console.log(route.params.id);
+        //save버튼 누르면 변경된값 DB에 저장
+        const onSave = async() => {
+            const res =  await axios.put(`http://localhost:3000/todos/${todoId}`,{
+                subject:  todo.value.subject,
+                completed: todo.value.completed
+            });
+            originalTodo.value = {...res.data}; // 수정한 값을 현재값으로 바꾸기
+            triggerToast('Successfully save!!'); //수정했을 때 toast가 나오게하기
+            console.log(res);
+        }
 
         //수정값이 있는지 없는지
         const todoUpdated = computed(() => {
-            //todo의 값과 originalTodo의 값이 같지 않으면 버튼 활성화
             return !_.isEqual(todo.value, originalTodo.value);
-        })
+        });
 
         //input창에 해당 id의 subject 보이기
-        const getTodo = async () => {
-            const res = await axios.get(`http://localhost:3000/todos/${todoId}`);
-            todo.value = {...res.data};
-            originalTodo.value = {...res.data};
-            loading.value = false;  //데이터 받아오면 false
+        const getTodo =async() => {
+            try{
+                 const res =  await axios.get(`http://localhost:3000/todos/${todoId}`);
+                todo.value = {...res.data};
+                originalTodo.value = {...res.data};
+                loading.value = false;  //데이터 받아오면 false
+            }catch(err){
+                console.log(err);
+                triggerToast('something went wrong :('); //기본은 success
+            }
+         
         };
+
 
         getTodo();
 
-        //save버튼 누르면 변경된값 DB에 저장
-        const onSave = async () => {
-            const res = await axios.put(`http://localhost:3000/todos/${todoId}`, {
-                subject: todo.value.subject,
-                completed: todo.value.completed
-            });
-            originalTodo.value = {...res.data}; //수정된 값으로
-            triggerToast();
-            console.log(res);
+
+        const toggleTodoStatus = () => {
+            todo.value.completed = ! todo.value.completed;
         };
 
-        const toogleTodoStatus = () => {
-            todo.value.completed = !todo.value.completed;
-        }
-
+        //다시 목록 페이지로 돌아가기
         const moveToListPage = () => {
-            //다시 목록 페이지로 돌아가기
             router.push({
-                name: 'Todos'});
-        }
+                name: 'Todos'
+            })
+        };
 
+
+   
         return {
             todo,
             loading,
-            toogleTodoStatus,
+            toggleTodoStatus,
             moveToListPage,
             onSave,
             todoUpdated,
+            showToast,
             triggerToast,
-        }
+            toastMessage,
+        };
     }
 }
+
+
 </script>
 
+
 <style>
+
 
 </style>
