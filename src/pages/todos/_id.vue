@@ -62,6 +62,12 @@ export default {
         const todoId = route.params.id;
         const originalTodo = ref(null);
 
+        const showToast = ref(false);
+
+        const triggerToast = () => {
+            showToast.value = true;
+        }
+
         //route에서 넘어오는 파라미터 id 확인
         console.log(route.params.id);
 
@@ -87,6 +93,8 @@ export default {
                 subject: todo.value.subject,
                 completed: todo.value.completed
             });
+            originalTodo.value = {...res.data}; //수정된 값으로
+            triggerToast();
             console.log(res);
         };
 
@@ -107,6 +115,7 @@ export default {
             moveToListPage,
             onSave,
             todoUpdated,
+            triggerToast,
         }
     }
 }
