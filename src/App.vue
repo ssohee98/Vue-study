@@ -1,68 +1,69 @@
 <template>  
-<div class="container">
-  <h2>To-Do</h2>
+  <router-view/>
+  <div class="container">
+    <h2>To-Do</h2>
 
 
-  <input
-    class="form-control"
-    type="text"
-    v-model="searchText"
-    placeholder="Search"
-    @keyup.enter="searchTodo"
-  >
- 
-  <hr>
+    <input
+      class="form-control"
+      type="text"
+      v-model="searchText"
+      placeholder="Search"
+      @keyup.enter="searchTodo"
+    >
+  
+    <hr>
 
 
-  <TodoSimpleForm @add-todo="addTodo"/>
-  <div style="color: red">{{error}}</div>
+    <TodoSimpleForm @add-todo="addTodo"/>
+    <div style="color: red">{{error}}</div>
 
 
-  <div v-if="!todos.length">
-    추가된 Todo가 없습니다.
-  </div>
+    <div v-if="!todos.length">
+      추가된 Todo가 없습니다.
+    </div>
 
 
-  <div v-if="!todos.length">
-    There is nothing to display
-  </div>
+    <div v-if="!todos.length">
+      There is nothing to display
+    </div>
 
 
-  <TodoList :todos="todos"  
-            @toggle-todo="toggleTodo"
-            @delete-todo="deleteTodo"/>  
+    <TodoList :todos="todos"  
+              @toggle-todo="toggleTodo"
+              @delete-todo="deleteTodo"/>  
 
 
-  <br>
+    <br>
 
 
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      <li
-        v-if="currentPage !== 1" 
-        class="page-item">
-        <a class="page-link" @click="getTodos(currentPage - 1)">Previous</a>
-      </li>
-      <li
-        v-for="page in numberOfPages"
-        :key="page"
-        class="page-item"
-        :class="currentPage === page ? 'active' : ''">
-        <a class="page-link"
-            @click="getTodos(page)">
-            {{page}}
-        </a>
-      </li>        
-      <li 
-        v-if="numberOfPages != currentPage"
-        class="page-item">
-        <a class="page-link" @click="getTodos(currentPage + 1)">Next</a>
-      </li>
-    </ul>
-  </nav>       
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li
+          v-if="currentPage !== 1" 
+          class="page-item">
+          <a class="page-link" @click="getTodos(currentPage - 1)">Previous</a>
+        </li>
+        <li
+          v-for="page in numberOfPages"
+          :key="page"
+          class="page-item"
+          :class="currentPage === page ? 'active' : ''">
+          <a class="page-link"
+              @click="getTodos(page)">
+              {{page}}
+          </a>
+        </li>        
+        <li 
+          v-if="numberOfPages != currentPage"
+          class="page-item">
+          <a class="page-link" @click="getTodos(currentPage + 1)">Next</a>
+        </li>
+      </ul>
+    </nav>       
 
 
-</div>  
+  </div>  
 </template>
 
 
@@ -100,7 +101,7 @@ export default {
       }, 2000);
     });
 
-    const searchTodo = () => {
+    const searchTodo = () => {  //엔터쳤을때
       clearTimeout(timeout); //기존 검색 취소
       getTodos(1);           //바로 조회
     }

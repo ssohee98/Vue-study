@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { watchEffect } from 'vue';
 export default {
     props: {
         todos: {
@@ -37,16 +36,10 @@ export default {
     emits: ['toggle-todo', 'delete-todo'], 
 
     setup(props, {emit}) { 
-        watchEffect(() => {
-            //todos의 길이가 변경될때마다(값 추가될때마다 데이터 수 출력)
-            console.log(props.todos.length);
-        })
-        
 
         //체크박스 유지
         //바뀐 부분을(index) 부모에게 toggle-todo이름으로 전달
         const toggleTodo = (index) => {
-
             emit('toggle-todo', index);
         }
 
