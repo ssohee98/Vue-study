@@ -4,7 +4,9 @@
       :key="todo.id"
       class="card mt-2">
       <div class="card-body p-2 d-flex align-items-center">
-        <div class="form-check flex-grow-1">
+        <div 
+            class="form-check flex-grow-1"
+            @click="moveToPage(todo.id)">
         <input class="form-check-input" 
                 type="checkbox"
                 :checked="todo.completed"
@@ -25,6 +27,7 @@
 </template>
 
 <script>
+import {useRouter} from 'vue-router';
 export default {
     props: {
         todos: {
@@ -37,6 +40,7 @@ export default {
 
     setup(props, {emit}) { 
 
+        const router = useRouter();
         //체크박스 유지
         //바뀐 부분을(index) 부모에게 toggle-todo이름으로 전달
         const toggleTodo = (index) => {
@@ -48,9 +52,17 @@ export default {
             emit('delete-todo', index);   
         }
 
+        //각 데이터 카드 선택시 todo id값 
+        const moveToPage = (todoId) => {
+            console.log(todoId);
+            //router 를 사용하여 해당 id페이지로 이동
+            router.push('/todos/'+todoId);
+        }
+
         return {
             toggleTodo,
             deleteTodo,
+            moveToPage,
         }
     }
 }
