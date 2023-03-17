@@ -66,7 +66,7 @@
 
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 import axios from "axios";
@@ -91,6 +91,10 @@ export default {
     const limit = 5;
     const currentPage = ref(1);
 
+    watch(currentPage, (currentPage, prev) => { 
+      //현재 페이지가 변할때마다 바뀐값과 이전값(전페이지)
+      console.log(currentPage, prev);
+    });
 
     //총 페이지수: numberOfTodos 값에 따라 바뀌어야하므로 computed 사용
     const numberOfPages = computed(() => {
