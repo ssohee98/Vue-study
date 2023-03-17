@@ -27,17 +27,23 @@
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
+    <button 
+        class="btn btn-primary ml-2"
+        @click="moveToListPage">
+        Cancel
+    </button>
   </form>
 </template>
 
 <script>
-import {useRoute} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import axios from 'axios';
 import {ref} from '@vue/reactivity';
 
 export default {
     setup() {
         const route = useRoute();
+        const router = useRouter();
         const todo = ref(null);
         const loading = ref(true);  //처음엔 true
 
@@ -56,10 +62,17 @@ export default {
             todo.value.completed = !todo.value.completed;
         }
 
+        const moveToListPage = () => {
+            //다시 목록 페이지로 돌아가기
+            router.push({
+                name: 'Todos'});
+        }
+
         return {
             todo,
             loading,
             toogleTodoStatus,
+            moveToListPage,
         }
     }
 }
