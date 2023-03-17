@@ -27,7 +27,12 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button 
+        type="submit" 
+        class="btn btn-primary"
+        :disabled="!todoUpdated">
+        Save
+    </button>
     <button 
         class="btn btn-primary ml-2"
         @click="moveToListPage">
@@ -39,7 +44,8 @@
 <script>
 import {useRoute, useRouter} from 'vue-router';
 import axios from 'axios';
-import {ref} from '@vue/reactivity';
+import {ref, computed} from '@vue/reactivity';
+import _ from 'lodash';
 
 export default {
     setup() {
@@ -48,14 +54,22 @@ export default {
         const todo = ref(null);
         const loading = ref(true);  //처음엔 true
         const todoId = route.params.id;
+        const originalTodo = ref(null);
 
         //route에서 넘어오는 파라미터 id 확인
         console.log(route.params.id);
 
+        //수정값이 있는지 없는지
+        const todoUpdated = computed(() => {
+            //todo의 값과 originalTodo의 값이 같지 않으면 버튼 활성화
+            return !_.isEqual(todo.value, originalTodo.value);
+        })
+
         //input창에 해당 id의 subject 보이기
         const getTodo = async () => {
             const res = await axios.get(`http://localhost:3000/todos/${todoId}`);
-            todo.value = res.data;
+            todo.value = {...res.data};
+            originalTodo.value = {...res.data};
             loading.value = false;  //데이터 받아오면 false
         };
 
@@ -86,6 +100,7 @@ export default {
             toogleTodoStatus,
             moveToListPage,
             onSave,
+            todoUpdated,
         }
     }
 }
