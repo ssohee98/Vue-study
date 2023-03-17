@@ -1,6 +1,8 @@
 <template>
-  <div class="alert alert-success toast-box"
-  role="alert">
+  <div 
+    class="alert alert-success toast-box"
+    role="alert"
+    :class="`alert-${type}`">
     {{message}}
   </div>
 </template>
@@ -12,6 +14,11 @@ export default {
         message: {
             type: String,
             required: true
+        },
+        
+        type: {
+            type: String,
+            default: 'success'
         }
     }
 }
@@ -25,7 +32,5 @@ export default {
     position: fixed;
     top: 10px;
     right: 10px;
-
-
  }
 </style>
