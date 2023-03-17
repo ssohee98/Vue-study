@@ -39,6 +39,7 @@
         Cancel
     </button>
   </form>
+  <Toast/>
 </template>
 
 <script>
@@ -46,8 +47,13 @@ import {useRoute, useRouter} from 'vue-router';
 import axios from 'axios';
 import {ref, computed} from '@vue/reactivity';
 import _ from 'lodash';
+import Toast from '@/components/Toast.vue';
 
 export default {
+    components: {
+        Toast
+    },
+
     setup() {
         const route = useRoute();
         const router = useRouter();
