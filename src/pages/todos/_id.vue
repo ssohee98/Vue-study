@@ -55,7 +55,6 @@ export default {
         const todoId =  route.params.id;
         const originalTodo = ref(null);
 
-
         const showToast = ref(false);
         const toastMessage = ref('');
 
@@ -69,6 +68,10 @@ export default {
             }, 3000);
         }
 
+        const toggleTodoStatus = () => {
+            todo.value.completed = ! todo.value.completed;
+        };
+
         //save버튼 누르면 변경된값 DB에 저장
         const onSave = async() => {
             const res =  await axios.put(`http://localhost:3000/todos/${todoId}`,{
@@ -76,7 +79,7 @@ export default {
                 completed: todo.value.completed
             });
             originalTodo.value = {...res.data}; // 수정한 값을 현재값으로 바꾸기
-            triggerToast('Successfully save!!'); //수정했을 때 toast가 나오게하기
+            triggerToast('Successfully save :)'); //수정했을 때 toast가 나오게하기
             console.log(res);
         }
 
@@ -101,11 +104,6 @@ export default {
 
 
         getTodo();
-
-
-        const toggleTodoStatus = () => {
-            todo.value.completed = ! todo.value.completed;
-        };
 
         //다시 목록 페이지로 돌아가기
         const moveToListPage = () => {
