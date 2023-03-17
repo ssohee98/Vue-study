@@ -10,7 +10,8 @@
         <input class="form-check-input" 
                 type="checkbox"
                 :checked="todo.completed"
-                @change="toggleTodo(index)"> 
+                @change="toggleTodo(index)"
+                @click.stop> 
         <label class="form-check-label"
                 :class="{todo: todo.completed}">
              {{ todo.subject }}
@@ -56,7 +57,13 @@ export default {
         const moveToPage = (todoId) => {
             console.log(todoId);
             //router 를 사용하여 해당 id페이지로 이동
-            router.push('/todos/'+todoId);
+            //router.push('/todos/'+todoId);
+            router.push({
+                name: 'Todo',   //router>index.js 의 경로 name과 일치해야함
+                params: {
+                    id: todoId
+                }
+            });
         }
 
         return {

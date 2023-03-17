@@ -97,7 +97,7 @@
     },
     {
       "subject": "new",
-      "completed": false,
+      "completed": true,
       "id": 23
     }
   ]
