@@ -22,12 +22,12 @@
   </div>
 
 
-  <div v-if="!filteredTodos.length">
+  <div v-if="!todos.length">
     There is nothing to display
   </div>
 
 
-  <TodoList :todos="filteredTodos"  
+  <TodoList :todos="todos"  
             @toggle-todo="toggleTodo"
             @delete-todo="deleteTodo"/>  
 
@@ -91,9 +91,8 @@ export default {
     const limit = 5;
     const currentPage = ref(1);
 
-    watch(currentPage, (currentPage, prev) => { 
-      //현재 페이지가 변할때마다 바뀐값과 이전값(전페이지)
-      console.log(currentPage, prev);
+    watch(searchText, () => { //searchText값에 변화가 있다면
+      getTodos(1);
     });
 
     //총 페이지수: numberOfTodos 값에 따라 바뀌어야하므로 computed 사용
@@ -102,21 +101,21 @@ export default {
     });
 
 
-    //검색
-    const filteredTodos = computed(() => {
-      //검색할 값이 있으면 필터처리
-      if(searchText.value) {
-        return todos.value.filter(todo => {
-          //todos배열을 하나씩 todo로 넘겨서
-          //todo의 subject 값이 searchText값을 포함한다면
-          return todo.subject.includes(searchText.value)
-        });
-      }
+    //검색 (현재 페이지에서만 검색/ 다른페이지에 있어도 검색 안됨)
+    // const filteredTodos = computed(() => {
+    //   //검색할 값이 있으면 필터처리
+    //   if(searchText.value) {
+    //     return todos.value.filter(todo => {
+    //       //todos배열을 하나씩 todo로 넘겨서
+    //       //todo의 subject 값이 searchText값을 포함한다면
+    //       return todo.subject.includes(searchText.value)
+    //     });
+    //   }
 
 
-      //없으면 그냥 todos
-      return todos.value
-    });
+    //   //없으면 그냥 todos
+    //   return todos.value
+    // });
 
 
     // Create 추가
@@ -177,7 +176,7 @@ export default {
       try{
         //url 요청하고, 현재 글 개수까지
         const res = await axios.get(
-          `http://localhost:3000/todos?_page=${page}&_limit=${limit}`);
+          `http://localhost:3000/todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
 
         numberOfTodos.value = res.headers['x-total-count'];  
         //console.log(res.headers['x-total-count']);
@@ -199,7 +198,7 @@ export default {
       addTodo,
       toggleTodo,
       searchText,
-      filteredTodos,
+      //filteredTodos,
       error,
       getTodos,
       numberOfTodos,
