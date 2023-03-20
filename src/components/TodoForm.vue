@@ -1,5 +1,4 @@
 <template>
-  <h1>Todo Page </h1>
   <div v-if="loading">
     Loading...
   </div>
@@ -12,7 +11,7 @@
             <input v-model="todo.subject" type="text" class="form-control">
             </div>
          </div>
-         <div class="col-6">
+         <div v-if="editing" class="col-6">
             <div class="form-group">
              <label>status</label>
              <div>
@@ -47,9 +46,16 @@ import { useToast } from '@/composables/toast';
 export default {
     components: {
         Toast
-       
     },
-    setup(){
+
+    props: {
+        editing: {
+            type: Boolean,
+            default: false
+        }
+    },
+
+    setup(props){
         onUnmounted(() => {
             console.log('unmounted');
             clearTimeout(timeout.value);    
@@ -58,8 +64,11 @@ export default {
 
         const route = useRoute();
         const router = useRouter();
-        const todo = ref(null);
-        const loading = ref(true);  //처음엔 true
+        const todo = ref({
+            subject: '',
+            completed: false
+        });
+        const loading = ref(false);  //처음엔 true
         const todoId =  route.params.id;
         const originalTodo = ref(null);
 
@@ -106,19 +115,26 @@ export default {
 
         //input창에 해당 id의 subject 보이기
         const getTodo =async() => {
+            loading.value = true;   //처음엔 false 로 놓고 데이터 읽어올때 true로 변경
             try{
                 const res =  await axios.get(`http://localhost:3000/todos/${todoId}`);
                 todo.value = {...res.data};
                 originalTodo.value = {...res.data};
                 loading.value = false;  //데이터 받아오면 false
             }catch(err){
+                loading.value = false;  //다시 false 로 변경
                 console.log(err);
                 triggerToast('something went wrong', 'danger'); //기본은 success
             }
          
         };
 
-        getTodo();
+        if(props.editing) {
+            //editing 값이 true일때만(수정모드) 데이터 읽어오기
+            //default: false 는 create 이므로 데이터 읽어올 필요X
+            getTodo();
+        }
+
         const toggleTodoStatus = () => {
             todo.value.completed = ! todo.value.completed;
         };

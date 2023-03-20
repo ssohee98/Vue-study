@@ -1,6 +1,6 @@
 <template>
   <h1>Todo Page </h1>
-  <TodoForm/>
+  <TodoForm :editing="true"/>
 </template>
 
 
@@ -10,7 +10,7 @@ import TodoForm from '@/components/TodoForm.vue';
 export default {
     components: {
         TodoForm
-    },
+    }
 }
 </script>
 
