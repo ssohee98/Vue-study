@@ -19,9 +19,9 @@
       </div>
   
     <hr>
-
+<!-- 
     <TodoSimpleForm @add-todo="addTodo"/>
-    <div style="color: red">{{error}}</div>
+    <div style="color: red">{{error}}</div> -->
 
     <div v-if="!todos.length">
       추가된 Todo가 없습니다.
@@ -74,7 +74,6 @@
 
 <script>
 import { ref, computed, watch } from 'vue';
-import TodoSimpleForm from '@/components/TodoSimpleForm.vue';
 import TodoList from '@/components/TodoList.vue';
 import Toast from '@/components/Toast.vue';
 import { useToast } from '@/composables/toast';
@@ -85,7 +84,6 @@ import axios from "axios";
 export default {
   components: {
     //import로 뷰 가져오고 componets 등록
-    TodoSimpleForm,
     TodoList,
     Toast,
   },
