@@ -24,8 +24,21 @@
              </div>
             </div>
         </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label>Body</label>
+                <textarea v-model="todo.body" class="form-control"
+                        cols="30" rows="10">
+                </textarea>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary" :disabled = "!todoUpdated">Save</button>
+    <button 
+        type="submit" 
+        class="btn btn-primary" 
+        :disabled = "!todoUpdated">
+        {{ editing ? 'Update' : 'Create' }}
+    </button>
     <button class="btn btn-primary ml-2" @click="moveToListPage">Cancel</button>
     </form>
     
