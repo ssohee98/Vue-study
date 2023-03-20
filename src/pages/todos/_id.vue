@@ -29,6 +29,7 @@
     <button type="submit" class="btn btn-primary" :disabled = "!todoUpdated">Save</button>
     <button class="btn btn-primary ml-2" @click="moveToListPage">Cancel</button>
     </form>
+    
     <Toast v-if="showToast" 
             :message="toastMessage"
             :type="toastAlertType"/>
@@ -42,6 +43,7 @@ import {useRoute, useRouter} from 'vue-router';
 import {ref, computed, onUnmounted} from 'vue';
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue';
+import { useToast } from '@/composables/toast';
 export default {
     components: {
         Toast
@@ -60,23 +62,31 @@ export default {
         const loading = ref(true);  //처음엔 true
         const todoId =  route.params.id;
         const originalTodo = ref(null);
-        const showToast = ref(false);
-        const toastMessage = ref('');
-        const toastAlertType = ref('');
-        const timeout = ref(null);
 
-        //Toast.vue에 메시지 전달
-        const triggerToast = (message, type='success') => {
-            showToast.value = true;
-            toastMessage.value = message;
-            toastAlertType.value = type;
-            timeout.value = setTimeout(() => {  //setTimeout 값을 timeout에 넣기
-                console.log('hello');
-                toastMessage.value = '';
-                showToast.value = false;
-                toastAlertType.value = '';
-            }, 3000);
-        }
+        const {
+        toastMessage,
+        toastAlertType,
+        showToast,
+        triggerToast
+        } = useToast();
+
+        // const showToast = ref(false);
+        // const toastMessage = ref('');
+        // const toastAlertType = ref('');
+        // const timeout = ref(null);
+
+        // //Toast.vue에 메시지 전달
+        // const triggerToast = (message, type='success') => {
+        //     showToast.value = true;
+        //     toastMessage.value = message;
+        //     toastAlertType.value = type;
+        //     timeout.value = setTimeout(() => {  //setTimeout 값을 timeout에 넣기
+        //         console.log('hello');
+        //         toastMessage.value = '';
+        //         showToast.value = false;
+        //         toastAlertType.value = '';
+        //     }, 3000);
+        // }
 
         //save버튼 누르면 변경된값 DB에 저장
         const onSave = async() => {

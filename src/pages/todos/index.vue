@@ -65,7 +65,7 @@
     <Toast v-if="showToast" 
             :message="toastMessage"
             :type="toastAlertType"/>
-            
+
 </template>
 
 
@@ -74,6 +74,7 @@ import { ref, computed, watch } from 'vue';
 import TodoSimpleForm from '@/components/TodoSimpleForm.vue';
 import TodoList from '@/components/TodoList.vue';
 import Toast from '@/components/Toast.vue';
+import { useToast } from '@/composables/toast';
 import axios from "axios";
 
 
@@ -98,21 +99,28 @@ export default {
     const currentPage = ref(1);
     let timeout = null;
 
-    const showToast = ref(false);
-    const toastMessage = ref('');
-    const toastAlertType = ref('');
+    const {
+      toastMessage,
+      toastAlertType,
+      showToast,
+      triggerToast
+    } = useToast();
 
-    //Toast.vue에 메시지 전달
-    const triggerToast = (message, type='success') => {
-        showToast.value = true;
-        toastMessage.value = message;
-        toastAlertType.value = type;
-        setTimeout(() => {  
-            toastMessage.value = '';
-            showToast.value = false;
-            toastAlertType.value = '';
-        }, 3000);
-    }
+    // const showToast = ref(false);
+    // const toastMessage = ref('');
+    // const toastAlertType = ref('');
+
+    // //Toast.vue에 메시지 전달
+    // const triggerToast = (message, type='success') => {
+    //     showToast.value = true;
+    //     toastMessage.value = message;
+    //     toastAlertType.value = type;
+    //     setTimeout(() => {  
+    //         toastMessage.value = '';
+    //         showToast.value = false;
+    //         toastAlertType.value = '';
+    //     }, 3000);
+    // }
 
     watch(searchText, () => { //searchText값에 변화가 있다면
       clearTimeout(timeout);  //검색어가 바뀌면 초기화(이전것을 검색하지 않도록)
