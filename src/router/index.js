@@ -36,7 +36,8 @@ const router = createRouter({
 
 export default router;
 
-//  /           들어왔을때 => Home 컴포넌트
-//  /todos      들어왔을때 => Todos 컴포넌트
-//  /todos/create
-//  /todos/:id
+//  /               들어왔을때 => Home 컴포넌트
+//  /todos          들어왔을때 => Todos 컴포넌트
+//  /todos/create   들어왔을때 => TodoCreate 컴포넌트
+//  /todos/:id      들어왔을때 => Todo 컴포넌트
+
