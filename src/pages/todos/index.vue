@@ -1,32 +1,35 @@
 <template>  
     <div>
-    <h2>To-Do</h2>
+      <div class="d-flex justify-content-between mb-3">
+        <h2>To-Do</h2>
 
+        <!-- <input
+          class="form-control"
+          type="text"
+          v-model="searchText"
+          placeholder="Search"
+          @keyup.enter="searchTodo"
+        > -->
 
-    <input
-      class="form-control"
-      type="text"
-      v-model="searchText"
-      placeholder="Search"
-      @keyup.enter="searchTodo"
-    >
+        <button 
+          class="btn btn-primary"
+          @click="moveToCreatPage">
+          Create Todo
+        </button>
+      </div>
   
     <hr>
 
-
     <TodoSimpleForm @add-todo="addTodo"/>
     <div style="color: red">{{error}}</div>
-
 
     <div v-if="!todos.length">
       추가된 Todo가 없습니다.
     </div>
 
-
     <div v-if="!todos.length">
       There is nothing to display
     </div>
-
 
     <TodoList :todos="todos"  
               @toggle-todo="toggleTodo"
@@ -75,6 +78,7 @@ import TodoSimpleForm from '@/components/TodoSimpleForm.vue';
 import TodoList from '@/components/TodoList.vue';
 import Toast from '@/components/Toast.vue';
 import { useToast } from '@/composables/toast';
+import { useRouter } from 'vue-router';
 import axios from "axios";
 
 
@@ -99,12 +103,21 @@ export default {
     const currentPage = ref(1);
     let timeout = null;
 
+    const router = useRouter();
+
     const {
       toastMessage,
       toastAlertType,
       showToast,
       triggerToast
     } = useToast();
+    
+    //create 버튼 클릭시 페이지 이동
+    const moveToCreatPage = () => {
+      router.push({
+        name: 'TodoCreate'  //router>index.js 에 설정한 name과 같아야함
+        });
+    }
 
     // const showToast = ref(false);
     // const toastMessage = ref('');
@@ -232,8 +245,8 @@ export default {
       }
     }
 
-
     getTodos();
+
 
 
     return {
@@ -254,6 +267,7 @@ export default {
       toastMessage,
       toastAlertType,
       triggerToast,
+      moveToCreatPage,
     }
   }
 }
