@@ -112,14 +112,37 @@ export default {
 
         //save버튼 누르면 변경된값 DB에 저장
         const onSave = async() => {
-            const res =  await axios.put(`http://localhost:3000/todos/${todoId}`,{
-                subject:  todo.value.subject,
-                completed: todo.value.completed
-            });
-            originalTodo.value = {...res.data}; // 수정한 값을 현재값으로 바꾸기
-            triggerToast('Successfully save!!'); //수정했을 때 toast가 나오게하기
-            console.log(res);
-        }
+            try{
+                let res;
+
+                const data = {
+                    subject: todo.value.subject,
+                    completed: todo.value.completed,
+                    body: todo.value.body
+                };
+                
+                if(props.editing) {
+                    res =  await axios.put(`http://localhost:3000/todos/${todoId}`, data);
+                    // res =  await axios.put(`http://localhost:3000/todos/${todoId}`,{
+                    // subject:  todo.value.subject,
+                    // completed: todo.value.completed
+                    // }); 
+                }else {
+                    res =  await axios.post('http://localhost:3000/todos', data);
+                    // res = await axios.post('http://localhost:3000/todos', {
+                    //     subject:  todo.value.subject,
+                    //     completed: todo.value.completed
+                    // });
+                }
+                originalTodo.value = {...res.data}; // 수정한 값을 현재값으로 바꾸기
+                const message = 'Successfully ' + (props.editing ? 'Update!' : 'Create!');
+                triggerToast(message); //수정/등록모드 따라 toast가 나오게하기
+                
+            }catch(err) {
+                console.log(res);                
+                triggerToast('something went wrong', 'danger'); //기본은 success
+            }
+        };
 
         //수정값이 있는지 없는지
         const todoUpdated = computed(() => {
