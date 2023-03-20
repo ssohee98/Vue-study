@@ -61,6 +61,11 @@
       </ul>
     </nav>       
     </div>
+    
+    <Toast v-if="showToast" 
+            :message="toastMessage"
+            :type="toastAlertType"/>
+            
 </template>
 
 
@@ -68,6 +73,7 @@
 import { ref, computed, watch } from 'vue';
 import TodoSimpleForm from '@/components/TodoSimpleForm.vue';
 import TodoList from '@/components/TodoList.vue';
+import Toast from '@/components/Toast.vue';
 import axios from "axios";
 
 
@@ -76,6 +82,7 @@ export default {
     //import로 뷰 가져오고 componets 등록
     TodoSimpleForm,
     TodoList,
+    Toast,
   },
 
 
@@ -90,6 +97,22 @@ export default {
     const limit = 5;
     const currentPage = ref(1);
     let timeout = null;
+
+    const showToast = ref(false);
+    const toastMessage = ref('');
+    const toastAlertType = ref('');
+
+    //Toast.vue에 메시지 전달
+    const triggerToast = (message, type='success') => {
+        showToast.value = true;
+        toastMessage.value = message;
+        toastAlertType.value = type;
+        setTimeout(() => {  
+            toastMessage.value = '';
+            showToast.value = false;
+            toastAlertType.value = '';
+        }, 3000);
+    }
 
     watch(searchText, () => { //searchText값에 변화가 있다면
       clearTimeout(timeout);  //검색어가 바뀌면 초기화(이전것을 검색하지 않도록)
@@ -139,7 +162,8 @@ export default {
         getTodos(1); 
       }catch(err) {
         //서버가 정상적으로 작동하지않은채로 Add하면 에러메시지
-        error.value="Something went wrong";
+        //error.value="Something went wrong";
+        triggerToast('something went wrong', 'danger');
       }
     }
 
@@ -157,7 +181,8 @@ export default {
         todos.value[index].completed = checked;  //
       }catch(err){
         console.log(err);
-        error.value = 'Someting went wrong';
+        //error.value = 'Someting went wrong';
+        triggerToast('something went wrong', 'danger');
       } 
     }
    
@@ -174,7 +199,8 @@ export default {
         getTodos(1);  //데이터 값만 불러오기
       }catch(err){
         console.log(err)
-        err.value =error.value = 'Something went wrong';
+        //err.value =error.value = 'Something went wrong';
+        triggerToast('something went wrong', 'danger');
       }
     } 
 
@@ -193,7 +219,8 @@ export default {
       }catch(err){
         //서버가 정상적으로 작동하지않은채로 Add하면 에러메시지
         console.log(err);
-        error.value = 'Someting went wrong';
+        //error.value = 'Someting went wrong';
+        triggerToast('something went wrong', 'danger');
       }
     }
 
@@ -215,6 +242,10 @@ export default {
       currentPage,
       numberOfPages,
       searchTodo,
+      showToast,
+      toastMessage,
+      toastAlertType,
+      triggerToast,
     }
   }
 }
