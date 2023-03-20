@@ -32,13 +32,15 @@
     <Toast v-if="showToast" 
             :message="toastMessage"
             :type="toastAlertType"/>
+
+    <div id="ssohee">ssohee</div>
 </template>
 
 
 <script>
 import axios from 'axios';
 import {useRoute, useRouter} from 'vue-router';
-import {ref, computed} from '@vue/reactivity';
+import {ref, computed, onBeforeMount, onMounted} from 'vue';
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue';
 export default {
@@ -47,6 +49,14 @@ export default {
        
     },
     setup(){
+        onBeforeMount(() => {
+            console.log(document.querySelector('#ssohee'));
+        });
+        
+        onMounted(() => {
+            console.log(document.querySelector('#ssohee'));
+        });
+
         const route = useRoute();
         const router = useRouter();
         const todo = ref(null);
